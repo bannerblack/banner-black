@@ -1,5 +1,6 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
+import { type Author, type Story, type Profile } from "@/app/types";
 
 // Database Tables
 
@@ -36,6 +37,7 @@ import { createClient } from "@/utils/supabase/server";
 
 // Users:
 // id uuid
+
 export async function getBasicUser() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
@@ -50,12 +52,6 @@ export async function getBasicUser() {
     throw new Error("No user found");
   }
 
-  console.log("User data:", {
-    id: data.user.id,
-    metadata: data.user.user_metadata,
-    email: data.user.email,
-  });
-
   return {
     id: data.user.id,
     avatarUrl: data.user.user_metadata?.avatar_url,
@@ -69,7 +65,7 @@ export async function getAuthorsByUserId(userId: string) {
   const { data: authors, error } = await supabase
     .from("Authors")
     .select("*")
-    .eq("id", userId);
+    .eq("user", userId);
 
   if (error) {
     console.error("Error fetching authors:", error);
@@ -79,7 +75,10 @@ export async function getAuthorsByUserId(userId: string) {
   return authors;
 }
 
-export async function getStoriesByUserId(userId: string) {
+// Query: get stories by user id and return stories and authors
+export async function getStoriesByUserId(
+  userId: string
+): Promise<Story[] | null> {
   const supabase = await createClient();
 
   const { data: stories, error } = await supabase
@@ -103,7 +102,8 @@ export async function getStoriesByUserId(userId: string) {
   return stories;
 }
 
-export async function getAuthor(id: string) {
+// Query: get author by id and return author and stories
+export async function getAuthor(id: string): Promise<Author | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("Profiles")

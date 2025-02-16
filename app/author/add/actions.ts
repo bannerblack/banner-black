@@ -3,79 +3,44 @@
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { authorFormSchema, type FormState } from "@/app/types";
 
-export async function addAuthor(prevState: any, formData: FormData) {
-  const username = formData.get("username") as string;
-  const userId = formData.get("userId") as string;
+export async function addAuthor(
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  const result = authorFormSchema.safeParse({
+    username: formData.get("username"),
+    about: formData.get("about") || undefined,
+  });
 
-  if (!username) {
+  if (!result.success) {
     return {
-      errors: {
-        username: "Username is required",
-      },
+      message: null,
+      errors: result.error.flatten().fieldErrors,
     };
   }
+
+  const username = result.data.username;
+  const about = result.data.about;
+  const userId = formData.get("userId") as string;
 
   const supabase = await createClient();
 
   const { data, error } = await supabase.rpc("create_author_and_profile", {
     p_user: userId,
     p_username: username,
+    p_about: about || null,
   });
 
   if (error) {
-    if (error.code === "P0001") {
-      return {
-        errors: {
-          username: "Author name already exists",
-        },
-      };
-    }
     console.error("Error creating author and profile:", error);
     return {
       message: "Something went wrong. Please try again.",
+      errors: {},
     };
   }
 
   revalidatePath("/");
   redirect(`/author/${data}`);
 }
-
-// export async function addAuthor({ username, userId }: AddAuthorParams) {
-//   const supabase = await createClient();
-
-//   const { data, error } = await supabase
-//     .from("Authors")
-//     .insert([
-//       {
-//         username,
-//         user: userId,
-//       },
-//     ])
-//     .select()
-//     .single();
-
-//   if (error) {
-//     console.error("Error adding author:", error);
-//     throw error;
-//   }
-
-//   console.log("Author added:", data);
-
-//   // Push profile to supabase
-//   const { data: profile, error: profileError } = await supabase
-//     .from("Profiles")
-//     .insert({
-//       id: data.user.id,
-//     });
-
-//   if (profileError) {
-//     console.error("Error adding profile:", profileError);
-//     throw profileError;
-//   }
-
-//   // redirect to author page
-//   redirect(`/author/${data.id}`);
-
-//   return data;
-// }
