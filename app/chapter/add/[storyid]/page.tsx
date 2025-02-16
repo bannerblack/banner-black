@@ -6,14 +6,22 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
-
+import { redirect } from "next/navigation";
 type PageProps = {
   params: { storyid: string };
 };
 
 export default async function AddChapter({ params }: PageProps) {
+  const { storyid } = await params;
   const user = await getBasicUser();
-  const story = await getStoryById(params.storyid);
+
+  if (!user) {
+    console.log("No user found");
+    //redirect to login
+    redirect("/login");
+  }
+
+  const story = await getStoryById(storyid);
 
   if (!story) {
     return (

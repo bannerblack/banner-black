@@ -1,6 +1,6 @@
 import React from "react";
 import { getBasicUser, getStoriesByUserId } from "@/app/queries";
-
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
   Card,
@@ -12,7 +12,9 @@ import {
 const ChooseStorytoAddChapter = async () => {
   const user = await getBasicUser();
   if (!user) {
-    return <div>You must be logged in to add a chapter</div>;
+    console.log("No user found");
+    //redirect to login
+    redirect("/login");
   }
   const stories = await getStoriesByUserId(user.id);
   return (
