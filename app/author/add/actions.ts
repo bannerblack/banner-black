@@ -15,9 +15,15 @@ export async function addAuthor(
   });
 
   if (!result.success) {
+    const fieldErrors = result.error.flatten().fieldErrors;
     return {
       message: null,
-      errors: result.error.flatten().fieldErrors,
+      errors: Object.fromEntries(
+        Object.entries(fieldErrors).map(([key, value]) => [
+          key,
+          value?.[0] || "",
+        ])
+      ),
     };
   }
 

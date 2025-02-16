@@ -1,10 +1,15 @@
 ## やること
 
+- Finish add chapter functionality
+- Add chapter index to the chapter
+  - Order them to get chapter?
+
+
 ## Implemented
 
 - ユーザーが作者を作成できる
 
-### /
+### /ROOT
 
 - Added reading, writing, creating tabs
   - Reading:

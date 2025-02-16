@@ -1,5 +1,5 @@
 import { AddChapterForm } from "./AddChapterForm";
-import { getBasicUser, getStory } from "@/app/queries";
+import { getBasicUser, getStoryById } from "@/app/queries";
 import {
   Card,
   CardContent,
@@ -13,7 +13,7 @@ type PageProps = {
 
 export default async function AddChapter({ params }: PageProps) {
   const user = await getBasicUser();
-  const story = await getStory(params.storyid);
+  const story = await getStoryById(params.storyid);
 
   if (!story) {
     return (
