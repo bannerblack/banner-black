@@ -1,7 +1,6 @@
 import { Story, columns } from "./columns";
 import { DataTable } from "./data-table";
-import { getStoriesByUserId } from "../queries";
-import { createClient } from "@/utils/supabase/server";
+import { getStoriesByUserId, getBasicUser } from "../queries";
 import {
   Card,
   CardHeader,
@@ -9,18 +8,9 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 async function getData(): Promise<Story[]> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-  if (error) {
-    throw error;
-  }
-  if (!user) {
-    throw new Error("User not authenticated");
-  }
+  const user = await getBasicUser();
   const stories = await getStoriesByUserId(user.id);
+  console.log(stories);
   return stories || [];
 }
 

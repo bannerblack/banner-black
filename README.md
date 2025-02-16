@@ -24,6 +24,14 @@
 - Added function to create author and profile
   - Supabase function : Author is created, then profile is created with the same uuid and Author relation is added to the profile
 
+### /story/add
+
+- Add function to create story
+
+### /story/[id]
+
+- Add function to get story by id
+
 ## Database Structure
 
 - Author

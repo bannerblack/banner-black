@@ -7,21 +7,21 @@ import { ColumnDef } from "@tanstack/react-table";
 export type Story = {
   id: string;
   storyTitle: string;
-  pairing: string;
-  words: number;
+  author: string;
+  createdAt: string;
 };
 
 export const columns: ColumnDef<Story>[] = [
   {
-    accessorKey: "storyTitle",
+    accessorKey: "title",
     header: "Story Title",
   },
   {
-    accessorKey: "pairing",
-    header: "Pairing",
+    accessorKey: "Authors.username",
+    header: "Author",
   },
   {
-    accessorKey: "words",
-    header: "Word Count",
+    accessorKey: "created_at",
+    header: "Created At",
   },
 ];

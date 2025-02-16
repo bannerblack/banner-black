@@ -27,13 +27,15 @@ export const storyFormSchema = z.object({
 });
 
 export const chapterFormSchema = z.object({
-  title: z.string().min(1, {
-    message: "Title is required",
+  title: z.string().min(2, {
+    message: "Title must be at least 2 characters.",
   }),
   content: z.string().min(10, {
-    message: "Content must be at least 10 characters",
+    message: "Content must be at least 10 characters.",
   }),
-  chapterIndex: z.number().min(0),
+  story_id: z.string(),
+  user_id: z.string(),
+  chapter_index: z.number(),
 });
 
 // Database Types
