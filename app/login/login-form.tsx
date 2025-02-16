@@ -8,6 +8,12 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 import { signInWithGithub } from "./actions";
 
@@ -32,19 +38,32 @@ export function LoginForm({
                 </Button>
               </form>
             </div>
-            <div className="text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
-                Sign up
-              </a>
-            </div>
           </div>
         </CardContent>
       </Card>
-      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Why Oauth?</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Accordion type="single" collapsible>
+            <AccordionItem value="why-oauth">
+              <AccordionTrigger>Signing in with Oauth</AccordionTrigger>
+              <AccordionContent>
+                <p>
+                  By signing in with one of the options above, I don't have to
+                  store your sensitive data! All I want is an ID so that I can
+                  identify you and keep track of your preferences and bookmarks.
+                </p>
+                <p className="mt-4">
+                  If these providers don't work for you, or you would like me to
+                  add one, please email brook@banner.black.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </CardContent>
+      </Card>
     </div>
   );
 }
