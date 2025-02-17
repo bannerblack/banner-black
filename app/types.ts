@@ -45,6 +45,7 @@ export type Authors = {
   created_at: string;
   user: string;
   username: string;
+  Stories?: Stories[];
 };
 
 export type Profiles = {

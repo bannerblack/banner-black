@@ -8,13 +8,13 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
-type AuthorPageProps = {
+type PageProps = {
   params: {
     id: string;
   };
 };
 
-const AuthorPage = async ({ params }: AuthorPageProps) => {
+const AuthorPage = async ({ params }: PageProps) => {
   const { id } = params;
   const profile = await getAuthor(id);
   console.log(profile);
