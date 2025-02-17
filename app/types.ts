@@ -58,13 +58,14 @@ export type Profiles = {
 export type Stories = {
   id: number;
   created_at: string;
-  Author?: Authors;
+  Authors?: Authors;
   title: string;
   summary: string;
   user_id: string;
   chapter_count: number;
   views: number;
   total_words: number;
+  Chapters?: Chapters[];
 };
 
 // create table public."Chapters" (

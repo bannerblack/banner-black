@@ -1,26 +1,32 @@
 import React from "react";
 import { createClient } from "@/utils/supabase/server";
-import { getBasicUser } from "@/app/queries";
+import { getBasicUser, getStoriesByUserId } from "@/app/queries";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import StoryCard from "@/app/story/StoryCard";
+
 const Writing = async () => {
   const user = await getBasicUser();
-  // Get the user's stories
-  const supabase = await createClient();
-  const { data: stories, error } = await supabase
-    .from("Stories")
-    .select("*")
-    .eq("id", user.id);
-
-  if (error) {
-    console.error(error);
-  }
+  const stories = await getStoriesByUserId(user.id);
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Writing</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {stories?.map((story) => (
-          <div key={story.id}>{story.title}</div>
-        ))}
+      <div>
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle>Stories</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {stories && stories.length > 0 ? (
+              stories.map((story) => (
+                <div key={story.id}>
+                  <StoryCard story={story} />
+                </div>
+              ))
+            ) : (
+              <div>No stories found</div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

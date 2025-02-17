@@ -63,7 +63,22 @@ export async function getStoryById(id: string): Promise<Stories | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("Stories")
-    .select("*")
+    .select(
+      `
+      *,
+      Authors (
+        id,
+        username
+      ),
+      Chapters (
+        id,
+        title,
+        chapter_index,
+        word_count,
+        created_at
+      )
+    `
+    )
     .eq("id", id)
     .single();
 
@@ -109,7 +124,8 @@ export async function getStoriesByUserId(
       )
     `
     )
-    .eq("user_id", userId);
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching stories:", error);
