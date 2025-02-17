@@ -136,14 +136,18 @@ export async function getStoriesByUserId(
 }
 
 // Query: get author by id and return author and stories
-export async function getAuthor(id: string): Promise<Authors | null> {
+export async function getAuthor(id: string): Promise<Profiles | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("Profiles")
     .select(
       `
       *,
-      Authors(*, Stories(*))
+      Authors (
+        id,
+        username,
+        Stories (*)
+      )
     `
     )
     .eq("id", id)
