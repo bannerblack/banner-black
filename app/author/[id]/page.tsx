@@ -7,14 +7,14 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { Metadata } from "next";
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
+interface Props {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
-const AuthorPage = async ({ params }: PageProps) => {
+const AuthorPage = async ({ params }: Props) => {
   const { id } = params;
   const profile = await getAuthor(id);
   console.log(profile);
