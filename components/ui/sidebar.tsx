@@ -30,6 +30,10 @@ type SidebarContextType = {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   side: "left" | "right";
+  isMobile: boolean;
+  state: string;
+  openMobile: boolean;
+  setOpenMobile: (open: boolean) => void;
 };
 
 const SidebarContext = React.createContext<SidebarContextType | undefined>(
@@ -45,23 +49,30 @@ function useSidebar() {
   return context;
 }
 
-export function SidebarProvider({
-  children,
-  side = "left",
-}: {
-  children: React.ReactNode;
-  side?: "left" | "right";
-}) {
+const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [openMobile, setOpenMobile] = React.useState(false);
+  const isMobile = useIsMobile();
+  const state = isOpen ? "open" : "closed";
 
   return (
-    <SidebarContext.Provider value={{ isOpen, setIsOpen, side }}>
+    <SidebarContext.Provider
+      value={{
+        isOpen,
+        setIsOpen,
+        side: "left",
+        isMobile,
+        state,
+        openMobile,
+        setOpenMobile,
+      }}
+    >
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         {children}
       </Sheet>
     </SidebarContext.Provider>
   );
-}
+};
 
 const Sidebar = React.forwardRef<
   HTMLDivElement,
@@ -458,7 +469,7 @@ const SidebarMenuButton = React.forwardRef<
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
-    const { isMobile, state } = useSidebar();
+    const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 
     const button = (
       <Comp
