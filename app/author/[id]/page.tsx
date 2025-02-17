@@ -9,12 +9,11 @@ import {
 } from "@/components/ui/card";
 import { Metadata } from "next";
 
-interface Props {
+export default async function AuthorPage({
+  params,
+}: {
   params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}
-
-const AuthorPage = async ({ params }: Props) => {
+}) {
   const { id } = params;
   const profile = await getAuthor(id);
   console.log(profile);
@@ -42,6 +41,4 @@ const AuthorPage = async ({ params }: Props) => {
       )}
     </>
   );
-};
-
-export default AuthorPage;
+}
