@@ -20,7 +20,6 @@ const StoryCard = ({ story }: { story: Stories }) => {
 
   return (
     <div>
-      <pre>{JSON.stringify(story, null, 2)}</pre>
       <Card className="mb-4">
         <CardHeader>
           <CardTitle>

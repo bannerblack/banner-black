@@ -21,13 +21,6 @@ export default async function AuthorPage({
 
   return (
     <div>
-      {profile && (
-        <div className="mb-4">
-          <pre className="overflow-auto p-4rounded-lg">
-            {JSON.stringify(profile, null, 2)}
-          </pre>
-        </div>
-      )}
       <Card>
         <CardHeader>
           <CardTitle className="text-ellipsis text-3xl font-bold mb-5">
