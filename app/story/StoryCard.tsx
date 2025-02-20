@@ -20,16 +20,20 @@ const StoryCard = ({ story }: { story: Stories }) => {
 
   return (
     <div>
+      <pre>{JSON.stringify(story, null, 2)}</pre>
       <Card className="mb-4">
         <CardHeader>
           <CardTitle>
+            {/* Story Title */}
             <Link href={`/story/${story.id}`}>{story.title}</Link> by{" "}
-            <Link href={`/profile/${story.Authors?.username}`}>
-              {story.Authors?.username}
+            {/* Author Username */}
+            <Link href={`/author/${story.Author?.id}`}>
+              {story?.Author.username}
             </Link>
           </CardTitle>
         </CardHeader>
         <CardDescription className="px-6 mb-2">
+          {/* Created Date */}
           Created: {formattedDate} | Views: {story.views} | Chapters:{" "}
           {story.chapter_count} | Total Words: {story.total_words}
         </CardDescription>

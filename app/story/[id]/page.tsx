@@ -1,5 +1,10 @@
 import React from "react";
-import { getBasicUser, getStoryById } from "../../queries";
+import {
+  getBasicUser,
+  getStoryById,
+  getAuthorsByUserId,
+  getRecommendationsByStoryId,
+} from "../../queries";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import {
@@ -11,6 +16,8 @@ import {
 } from "@/components/ui/card";
 import { BookmarkIcon, PencilIcon, BookOpenIcon, BookIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { RecommendModal } from "@/app/components/modals/RecommendModal";
 
 type StoryProps = {
   params: {
@@ -22,12 +29,46 @@ const Story = async ({ params }: StoryProps) => {
   const { id } = await params;
   const user = await getBasicUser();
   const story = await getStoryById(id);
+  const authors = await getAuthorsByUserId(user.id);
+  const recommendations = await getRecommendationsByStoryId(id);
 
   if (!story) {
     return <div>Story not found</div>;
   }
 
   console.log(story);
+
+  async function recommend(
+    authorId: string,
+    comment: string,
+    recommendationId?: string
+  ) {
+    "use server";
+    const supabase = await createClient();
+
+    if (recommendationId) {
+      // Update existing recommendation
+      const { error } = await supabase
+        .from("reccommendations")
+        .update({
+          comment,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", recommendationId);
+
+      if (error) console.error(error);
+    } else {
+      // Create new recommendation
+      const { error } = await supabase.from("reccommendations").insert({
+        user_id: user.id,
+        Story: id,
+        Author: authorId,
+        comment,
+      });
+
+      if (error) console.error(error);
+    }
+  }
 
   return (
     <>
@@ -50,6 +91,13 @@ const Story = async ({ params }: StoryProps) => {
           <p>{story.summary}</p>
         </CardContent>
       </Card>
+
+      <RecommendModal
+        storyId={id}
+        authors={authors || []}
+        existingRecommendations={recommendations || []}
+        onRecommend={recommend}
+      />
 
       <Card className="mt-4">
         <CardHeader>
