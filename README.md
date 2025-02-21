@@ -1,20 +1,23 @@
 ## やること
 
-- Finish add chapter functionality
-- Add chapter index to the chapter
-  - Order them to get chapter?
+## Implement
 
-
-## Implemented
-
-- ユーザーが作者を作成できる
+- Bookmark Edit, Complete, Delete
+- Fix bookmark links
+- Story/Chapter metadata
+- Update story words and total chapters
+- Custom user themes
+- User preferences
 
 ### /ROOT
 
 - Added reading, writing, creating tabs
-  - Reading:
-  - Writing:
-  - Creating:
+  - Read:
+    - Display account bookmarks
+      - Check complete, edit, delete
+  - Write:
+    - Display account stories by author
+  - Create:
     - Create new story
     - Create new chapter
     - Create new author
@@ -31,11 +34,12 @@
 
 ### /story/add
 
-- Add function to create story
+- Create story
 
 ### /story/[id]
 
-- Add function to get story by id
+- Get story by id
+- Add bookmark
 
 ## Database Structure
 
@@ -68,4 +72,21 @@
   - content
   - chapterindex
   - word_count
+  - created_at
+- Bookmarks
+  - id (uuid)
+  - author_id (author.uuid)
+  - -> Story (uuid)
+  - -> Chapter (uuid)
+  - note
+  - created_at
+- Likes
+  - id (uuid)
+  - author_id (author.uuid)
+  - -> Story (uuid)
+  - created_at
+- Recommendations
+  - id (uuid)
+  - author_id (author.uuid)
+  - -> Story (uuid)
   - created_at
