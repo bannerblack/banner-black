@@ -18,6 +18,7 @@ import { BookmarkIcon, PencilIcon, BookOpenIcon, BookIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { RecommendModal } from "@/app/components/modals/RecommendModal";
+import { BookmarkModal } from "@/app/components/modals/BookmarkModal";
 
 type StoryProps = {
   params: {
@@ -30,6 +31,7 @@ const Story = async ({ params }: StoryProps) => {
   const user = await getBasicUser();
   const story = await getStoryById(id);
   const authors = await getAuthorsByUserId(user.id);
+  const firstChapter = story?.Chapters?.[0];
   const recommendations = await getRecommendationsByStoryId(id);
 
   if (!story) {
@@ -70,6 +72,32 @@ const Story = async ({ params }: StoryProps) => {
     }
   }
 
+  async function bookmark(authorId: string, note: string, bookmarkId?: string) {
+    "use server";
+    const supabase = await createClient();
+
+    if (bookmarkId) {
+      const { error } = await supabase
+        .from("bookmarks")
+        .update({
+          note,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", bookmarkId);
+
+      if (error) console.error(error);
+    } else {
+      const { error } = await supabase.from("bookmarks").insert({
+        Chapter: firstChapter?.id,
+        Author: authorId,
+        note,
+        user_id: user.id,
+      });
+
+      if (error) console.error(error);
+    }
+  }
+
   return (
     <>
       <Card>
@@ -98,6 +126,14 @@ const Story = async ({ params }: StoryProps) => {
         authors={authors || []}
         existingRecommendations={recommendations || []}
         onRecommend={recommend}
+      />
+
+      <BookmarkModal
+        storyId={id}
+        chapterId={firstChapter?.id || ""}
+        authors={authors || []}
+        existingBookmarks={[]}
+        onBookmark={bookmark}
       />
 
       <Card className="mt-4">

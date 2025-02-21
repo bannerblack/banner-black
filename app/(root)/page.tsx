@@ -24,7 +24,7 @@ export default async function Home() {
             <TabsTrigger value="creating">Creating</TabsTrigger>
           </TabsList>
           <TabsContent value="reading" className="w-full border rounded-lg">
-            <Reading />
+            <Reading user={user} />
           </TabsContent>
           <TabsContent value="writing">
             <Writing />

@@ -7,8 +7,15 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import { getChapterById } from "@/app/queries";
+import {
+  getChapterById,
+  getAuthorsByUserId,
+  getBookmarksByChapterId,
+} from "@/app/queries";
 import Link from "next/link";
+import { BookmarkModal } from "@/app/components/modals/BookmarkModal";
+import { getBasicUser } from "@/app/queries";
+import { revalidatePath } from "next/cache";
 
 const ChapterPage = async ({
   params,
@@ -17,6 +24,46 @@ const ChapterPage = async ({
 }) => {
   const { id, chapterId } = await params;
   const { chapter, prevChapter, nextChapter } = await getChapterById(chapterId);
+  const user = await getBasicUser();
+  const authors = await getAuthorsByUserId(user.id);
+  const bookmarks = await getBookmarksByChapterId(chapterId);
+
+  async function bookmark(authorId: string, note: string, bookmarkId?: string) {
+    "use server";
+    const supabase = await createClient();
+
+    if (bookmarkId) {
+      const { error } = await supabase
+        .from("bookmarks")
+        .update({
+          note,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", bookmarkId);
+
+      if (error) {
+        console.error("Error updating bookmark:", error);
+        throw new Error("Failed to update bookmark");
+      }
+    } else {
+      const { data, error } = await supabase.from("bookmarks").insert({
+        Chapter: chapterId,
+        Author: authorId,
+        note,
+        user_id: user.id,
+      });
+
+      console.log("bookmarks", data);
+
+      if (error) {
+        console.error("Error creating bookmark:", error);
+        throw new Error("Failed to create bookmark");
+      }
+    }
+
+    revalidatePath(`/story/${id}/chapter/${chapterId}`);
+    revalidatePath("/reading");
+  }
 
   if (!chapter) return <div>Chapter not found</div>;
 
@@ -31,12 +78,12 @@ const ChapterPage = async ({
     <div>
       <div className="flex justify-between mb-4">
         {prevChapter && (
-          <Link href={`/story/${params.id}/chapter/${prevChapter.id}`}>
+          <Link href={`/story/${id}/chapter/${prevChapter.id}`}>
             ← {prevChapter.title}
           </Link>
         )}
         {nextChapter && (
-          <Link href={`/story/${params.id}/chapter/${nextChapter.id}`}>
+          <Link href={`/story/${id}/chapter/${nextChapter.id}`}>
             {nextChapter.title} →
           </Link>
         )}
@@ -58,6 +105,13 @@ const ChapterPage = async ({
               <p>{chapter?.word_count}</p>
             </div>
           </p>
+          <BookmarkModal
+            chapterId={chapterId}
+            storyId={id}
+            authors={authors || []}
+            existingBookmarks={bookmarks || []}
+            onBookmark={bookmark}
+          />
         </CardFooter>
       </Card>
     </div>

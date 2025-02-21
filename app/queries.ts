@@ -169,16 +169,16 @@ export async function getChapterById(id: string): Promise<{
   }
 
   // Get prev and next chapters
-  const { data: siblings } = await supabase
+  const { data: siblings = [] } = await supabase
     .from("Chapters")
-    .select("id, title, chapter_index")
+        .select("id, title, chapter_index")
     .eq("Story", chapter.Story)
     .order("chapter_index");
 
   const currentIndex = siblings?.findIndex((c) => c.id === id) ?? -1;
   const prevChapter = currentIndex > 0 ? siblings[currentIndex - 1] : null;
   const nextChapter =
-    siblings && currentIndex < siblings.length - 1
+    currentIndex < (siblings?.length ?? 0) - 1
       ? siblings[currentIndex + 1]
       : null;
 
@@ -203,7 +203,7 @@ export async function getChapterById(id: string): Promise<{
 export async function getBookmarksByUserId(userId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
-    .from("Bookmarks")
+    .from("bookmarks")
     .select("*")
     .eq("Author", userId);
 
@@ -278,6 +278,32 @@ export async function getRecommendationsByStoryId(storyId: string) {
 
   if (error) {
     console.error("Error fetching recommendations:", error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function getBookmarksByChapterId(chapterId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("bookmarks")
+    .select(`
+      *,
+      Author (
+        id,
+        username
+      ),
+      Chapter (
+        id,
+        title,
+        chapter_index
+      )
+    `)
+    .eq("Chapter", chapterId);
+
+  if (error) {
+    console.error("Error fetching bookmarks:", error);
     return null;
   }
 
