@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { chapterFormSchema, type FormState } from "@/app/types";
 import { Chapters } from "@/app/types";
+import { after } from "node:test";
 
 export async function addChapter(
   prevState: FormState,
@@ -17,7 +18,7 @@ export async function addChapter(
       Story: formData.get("story_id"),
       user_id: formData.get("user_id"),
       chapter_index: Number(formData.get("chapter_index")),
-      word_count: 0, // Add this to match schema
+      word_count: 0,
     });
 
     if (!result.success) {
@@ -53,6 +54,40 @@ export async function addChapter(
 
     if (error) {
       throw error;
+    }
+
+    // Increment story chapter count
+    const { data: storyData, error: storyError } = await supabase
+      .from("Stories")
+      .update({ chapter_count: chapter_index })
+      .eq("id", Story)
+      .select()
+      .single();
+
+    // get word counts of all chapters in story
+    const { data: chapterData, error: chapterError } = await supabase
+      .from("Chapters")
+      .select("word_count")
+      .eq("Story", Story);
+
+    if (chapterData == null) {
+      const total_word_count = word_count;
+    } else {
+      const total_word_count = chapterData.reduce(
+        (acc, chapter) => acc + chapter.word_count,
+          0
+        );
+
+        const { data: storyData2, error: storyError2 } = await supabase
+          .from("Stories")
+          .update({ total_words: total_word_count })
+          .eq("id", Story)
+          .select()
+          .single();
+
+      if (storyError2) {  
+        throw storyError2;
+      }
     }
 
     revalidatePath("/");

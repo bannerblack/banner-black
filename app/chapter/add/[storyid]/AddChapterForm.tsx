@@ -25,7 +25,7 @@ export function AddChapterForm({ story, userId }: AddChapterFormProps) {
       <input
         type="hidden"
         name="chapter_index"
-        value={story.chapter_count.toString()}
+        value={(story.chapter_count + 1).toString()}
       />
 
       <div className="space-y-2">

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { ShareNetwork } from "@phosphor-icons/react";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { type Authors } from "@/app/types";
-
+import { StarIcon } from "lucide-react";
 type Recommendation = {
   id: string;
   Author: string;
@@ -71,7 +72,10 @@ export function RecommendModal({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Recommend</Button>
+        <Button size="sm">
+          <ShareNetwork size={20} weight="bold" />
+          Recommend
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

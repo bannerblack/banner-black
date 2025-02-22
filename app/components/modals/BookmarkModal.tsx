@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { type Authors } from "@/app/types";
-import { BookmarkIcon } from "lucide-react";
+import { BookBookmark } from "@phosphor-icons/react";
 
 type Bookmark = {
   id: string;
@@ -73,14 +73,15 @@ export function BookmarkModal({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm">
-          <BookmarkIcon className="w-4 h-4 mr-2" />
+        <Button size="sm">
+          <BookBookmark weight="bold" />
           Bookmark
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
+            <BookBookmark size={30} className="mr-2 inline-block" />
             {existingBookmark ? "Edit Bookmark" : "Add Bookmark"}
           </DialogTitle>
         </DialogHeader>
@@ -88,7 +89,7 @@ export function BookmarkModal({
           <div>
             <label className="text-sm font-medium">Bookmark as:</label>
             <Select value={authorId} onValueChange={setAuthorId}>
-              <SelectTrigger>
+              <SelectTrigger className="mt-1">
                 <SelectValue placeholder="Select an author" />
               </SelectTrigger>
               <SelectContent>
@@ -112,7 +113,7 @@ export function BookmarkModal({
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="Add a note to your bookmark..."
-              className="h-32"
+              className="h-32 mt-1"
             />
           </div>
           <Button onClick={handleSubmit} disabled={!authorId}>

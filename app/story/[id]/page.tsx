@@ -13,13 +13,11 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
+  CardFooter,
 } from "@/components/ui/card";
-import { BookmarkIcon, PencilIcon, BookOpenIcon, BookIcon } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 import { RecommendModal } from "@/app/components/modals/RecommendModal";
 import { BookmarkModal } from "@/app/components/modals/BookmarkModal";
-
+import { formatDate } from "@/app/(root)/actions";
 type StoryProps = {
   params: {
     id: string;
@@ -101,40 +99,50 @@ const Story = async ({ params }: StoryProps) => {
   return (
     <>
       <Card>
+        {/* <pre>{JSON.stringify(story, null, 2)}</pre> */}
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">{story.title}</CardTitle>
-        </CardHeader>
-        <CardDescription className="px-6 mb-2">
-          <p>
-            {/* Author Username and ID */}
-            <Link href={`/author/${story.Author?.id}`}>
-              by {story.Author?.username}
+          <CardTitle className="text-2xl">
+            {story.title} by{" "}
+            <Link href={`/author/${story.Authors.id}`}>
+              {story.Authors.username}
             </Link>
-          </p>
-          <p>
-            <BookIcon className="inline-block w-4 h-4 mr-1" />
-            {story.chapter_count} chapters
-          </p>
+          </CardTitle>
+        </CardHeader>
+        <CardDescription className="border-t border-b px-6 py-3 flex flex-row gap-2">
+          <p>Chapters: {story.chapter_count}</p>
+          <p>Words: {story.total_words}</p>
+          <p>Views: {story.views}</p>
+          <p>Likes: {story.likes}</p>
+        </CardDescription>
+        <CardDescription className="border-b px-6 py-3 mb-4 flex flex-row gap-2">
+          <p>Comments: {story.comments}</p>
+          <p>Bookmarks: {story.bookmarks}</p>
+          {/* Created at and updated at */}
+          <p>Created: {formatDate(story.created_at)}</p>
+          <p>Updated: {formatDate(story.updated_at)}</p>
         </CardDescription>
         <CardContent>
           <p>{story.summary}</p>
         </CardContent>
       </Card>
 
-      <RecommendModal
-        storyId={id}
-        authors={authors || []}
-        existingRecommendations={recommendations || []}
-        onRecommend={recommend}
-      />
+      <CardFooter className="p-2 border rounded-md mt-4 flex justify-center gap-4">
+        <RecommendModal
+          storyId={id}
+          authors={authors || []}
+          existingRecommendations={recommendations || []}
+          onRecommend={recommend}
+        />
 
-      <BookmarkModal
-        storyId={id}
-        chapterId={firstChapter?.id || ""}
-        authors={authors || []}
-        existingBookmarks={[]}
-        onBookmark={bookmark}
-      />
+        <BookmarkModal
+          storyId={id}
+          chapterId={firstChapter?.id || ""}
+          authors={authors || []}
+          existingBookmarks={[]}
+          onBookmark={bookmark}
+        />
+      </CardFooter>
+      {/* Recommend Modal */}
 
       <Card className="mt-4">
         <CardHeader>
@@ -147,7 +155,7 @@ const Story = async ({ params }: StoryProps) => {
               {story.Chapters.map((chapter) => (
                 <div className="flex flex-row gap-4">
                   <div className="side border rounded-lg p-4">
-                    CH{chapter.chapter_index + 1}
+                    CH{chapter.chapter_index}
                   </div>
                   <div className="mt-1 chapter-info flex flex-col gap-1">
                     <div className="main font-bold">
@@ -156,10 +164,8 @@ const Story = async ({ params }: StoryProps) => {
                       </Link>
                     </div>
                     <div>
-                      <BookOpenIcon className="inline-block w-4 h-4 mr-1" />
                       {chapter.word_count} words |{" "}
                       <Link href={`/story/${story.id}/chapter/${chapter.id}`}>
-                        <BookmarkIcon className="inline-block w-4 h-4 mr-1" />
                         Bookmark
                       </Link>
                     </div>
