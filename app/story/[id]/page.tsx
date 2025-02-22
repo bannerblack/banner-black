@@ -107,8 +107,8 @@ const Story = async ({ params }: StoryProps) => {
         <CardDescription className="px-6 mb-2">
           <p>
             {/* Author Username and ID */}
-            <Link href={`/author/${story.Authors?.id}`}>
-              by {story.Authors?.username}
+            <Link href={`/author/${story.Author?.id}`}>
+              by {story.Author?.username}
             </Link>
           </p>
           <p>

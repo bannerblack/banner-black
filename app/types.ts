@@ -59,7 +59,10 @@ export type Profiles = {
 export type Stories = {
   id: number;
   created_at: string;
-  Authors?: Authors;
+  Author?: {
+    id: string;
+    username: string;
+  };
   title: string;
   summary: string;
   user_id: string;

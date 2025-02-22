@@ -13,15 +13,15 @@ export type Story = {
 
 export const columns: ColumnDef<Story>[] = [
   {
-    accessorKey: "storyTitle",
+    accessorKey: "title",
     header: "Story Title",
   },
   {
-    accessorKey: "author",
+    accessorKey: "Author.username",
     header: "Author",
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "created_at",
     header: "Created At",
   },
 ];
