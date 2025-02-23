@@ -16,7 +16,7 @@ export default async function Home() {
   } = await supabase.auth.getUser();
   return (
     <div>
-      <div className="container flex flex-col border border-grey rounded-lg items-center justify-center gap-4">
+      <div className="container flex flex-col border rounded-lg items-center justify-center gap-4">
         <Tabs defaultValue="reading" className="w-full p-4">
           <TabsList className="">
             <TabsTrigger value="reading">Reading</TabsTrigger>

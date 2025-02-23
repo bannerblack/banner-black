@@ -13,9 +13,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@/contexts/UserProvider";
-
+import { usePreferences } from "@/app/providers/PreferencesProvider";
 export const UserMenu = () => {
   const user = useUser();
+  const { isFeatureEnabled } = usePreferences();
 
   return (
     <DropdownMenu>
@@ -34,6 +35,11 @@ export const UserMenu = () => {
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {isFeatureEnabled("create") && (
+          <DropdownMenuItem>
+            <Link href="/create">Create</Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem>
           <form action={signOut}>
             <Button type="submit">Sign Out</Button>

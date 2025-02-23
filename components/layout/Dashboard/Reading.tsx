@@ -65,7 +65,7 @@ const Reading = async ({ user }: { user: any }) => {
   return (
     <>
       <Tabs defaultValue="bookmarks">
-        <TabsList className="w-full justify-end bg-neutral-950">
+        <TabsList className="w-full justify-end">
           <TabsTrigger value="bookmarks">List</TabsTrigger>
           <TabsTrigger value="stories">Table</TabsTrigger>
         </TabsList>

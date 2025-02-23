@@ -49,7 +49,12 @@ function useSidebar() {
   return context;
 }
 
-const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
+type SidebarProviderProps = {
+  children: React.ReactNode;
+  side: "left" | "right";
+};
+
+export function SidebarProvider({ children, side }: SidebarProviderProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [openMobile, setOpenMobile] = React.useState(false);
   const isMobile = useIsMobile();
@@ -60,7 +65,7 @@ const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         isOpen,
         setIsOpen,
-        side: "left",
+        side,
         isMobile,
         state,
         openMobile,
@@ -72,7 +77,7 @@ const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
       </Sheet>
     </SidebarContext.Provider>
   );
-};
+}
 
 const Sidebar = React.forwardRef<
   HTMLDivElement,

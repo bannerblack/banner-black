@@ -59,6 +59,7 @@ export type Profiles = {
 export type Stories = {
   id: number;
   created_at: string;
+  updated_at: string;
   Author?: {
     id: string;
     username: string;
@@ -69,6 +70,9 @@ export type Stories = {
   chapter_count: number;
   views: number;
   total_words: number;
+  likes: number;
+  comments: number;
+  bookmarks: number;
   Chapters?: Chapters[];
 };
 
@@ -112,3 +116,28 @@ export type ApiResponse<T> = {
 
 // Utility Types
 export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+
+export type UserPreferences = {
+  theme: {
+    name: ThemeKey;
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    muted: string;
+    foreground: string;
+  };
+  ui: {
+    showChapterNumbers: boolean;
+    showWordCount: boolean;
+    showSummaryInCards: boolean;
+    compactView: boolean;
+  };
+  reading: {
+    fontSize: number;
+    lineHeight: number;
+    paragraphSpacing: number;
+  };
+};
+
+export type PreferenceKey = keyof UserPreferences['ui'];

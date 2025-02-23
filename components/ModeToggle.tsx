@@ -1,9 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,9 +9,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Moon, Sun } from "lucide-react";
+
+const themeNames = {
+  light: "Light",
+  dark: "Dark",
+  forest: "Forest",
+  "forest-dark": "Forest Dark",
+  mocha: "Mocha",
+  matcha: "Matcha",
+  "matcha-dark": "Matcha Dark",
+  system: "System",
+} as const;
 
 export function ModeToggle() {
-  const { setTheme } = useTheme();
+  const { theme, setTheme, themes } = useTheme();
 
   return (
     <DropdownMenu>
@@ -25,15 +35,15 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
-        </DropdownMenuItem>
+        {themes.map((themeName) => (
+          <DropdownMenuItem
+            key={themeName}
+            onClick={() => setTheme(themeName)}
+            className={theme === themeName ? "bg-accent" : ""}
+          >
+            {themeNames[themeName as keyof typeof themeNames] || themeName}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

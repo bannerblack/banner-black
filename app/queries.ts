@@ -5,6 +5,7 @@ import {
   type Stories,
   type Profiles,
   Chapters,
+  type UserPreferences,
 } from "@/app/types";
 
 
@@ -169,18 +170,18 @@ export async function getChapterById(id: string): Promise<{
   }
 
   // Get prev and next chapters
-  const { data: siblings = [] } = await supabase
+  const { data: siblings } = await supabase
     .from("Chapters")
-        .select("id, title, chapter_index")
+    .select("id, title, chapter_index")
     .eq("Story", chapter.Story)
     .order("chapter_index");
 
-  const currentIndex = siblings?.findIndex((c) => c.id === id) ?? -1;
-  const prevChapter = currentIndex > 0 ? siblings[currentIndex - 1] : null;
-  const nextChapter =
-    currentIndex < (siblings?.length ?? 0) - 1
-      ? siblings[currentIndex + 1]
-      : null;
+  // Ensure siblings is an array
+  const siblingsArray = siblings || [];
+
+  const currentIndex = siblingsArray.findIndex((c) => c.id === id);
+  const prevChapter = currentIndex > 0 ? siblingsArray[currentIndex - 1] : null;
+  const nextChapter = currentIndex < siblingsArray.length - 1 ? siblingsArray[currentIndex + 1] : null;
 
   return {
     chapter,
@@ -308,4 +309,41 @@ export async function getBookmarksByChapterId(chapterId: string) {
   }
 
   return data;
+}
+
+export async function getPreferences(): Promise<UserPreferences | null> {
+  const supabase = await createClient();
+  const user = await getBasicUser();
+
+  const { data, error } = await supabase
+    .from("user_preferences")
+    .select("preferences")
+    .eq("id", user.id)
+    .single();
+
+  if (error) {
+    console.error("Error fetching preferences:", error);
+    return null;
+  }
+
+  // Return default preferences if none exist
+  return data?.preferences || {
+    theme: {
+      primary: "#000000",
+      secondary: "#ffffff",
+      accent: "#ff0000",
+      background: "#f0f0f0"
+    },
+    ui: {
+      showChapterNumbers: true,
+      showWordCount: true,
+      showSummaryInCards: true,
+      compactView: false
+    },
+    reading: {
+      fontSize: 16,
+      lineHeight: 1.5,
+      paragraphSpacing: 1.2
+    }
+  };
 }
