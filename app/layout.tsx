@@ -15,7 +15,7 @@ import { getBasicUser } from "@/lib/user";
 import { LeftSidebar, RightSidebar } from "@/components/layout/app-sidebar";
 import { PreferencesProvider } from "@/app/providers/PreferencesProvider";
 import { getPreferences } from "@/app/queries";
-
+import Grain from "@/components/layout/Dashboard/Grain";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -41,17 +41,17 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <PreferencesProvider initialPreferences={preferences}>
-        <ThemeProvider
-          attribute="data-theme"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background`}
+      <UserProvider initialUser={user}>
+        <PreferencesProvider>
+          <ThemeProvider
+            attribute="data-theme"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
           >
-            <UserProvider initialUser={user}>
+            <body
+              className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background`}
+            >
               <Header />
               <div className="wrapper flex w-full h-full flex-col md:flex-row">
                 {/* Left Sidebar */}
@@ -60,6 +60,8 @@ export default async function RootLayout({
                     <LeftSidebar />
                   </div>
                 </SidebarProvider>
+
+                <Grain />
 
                 {/* Main Content */}
                 <main className="w-full md:w-2/4">{children}</main>
@@ -71,10 +73,10 @@ export default async function RootLayout({
                   </div>
                 </SidebarProvider>
               </div>
-            </UserProvider>
-          </body>
-        </ThemeProvider>
-      </PreferencesProvider>
+            </body>
+          </ThemeProvider>
+        </PreferencesProvider>
+      </UserProvider>
     </html>
   );
 }

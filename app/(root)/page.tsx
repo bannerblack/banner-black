@@ -16,17 +16,23 @@ export default async function Home() {
   } = await supabase.auth.getUser();
   return (
     <div>
-      <div className="container flex flex-col border rounded-lg items-center justify-center gap-4">
+      <div className="container flex flex-col border border-border rounded-lg items-center justify-center gap-4">
         <Tabs defaultValue="reading" className="w-full p-4">
-          <TabsList className="">
+          <TabsList className="border-b border-border">
             <TabsTrigger value="reading">Reading</TabsTrigger>
             <TabsTrigger value="writing">Writing</TabsTrigger>
             <TabsTrigger value="creating">Creating</TabsTrigger>
           </TabsList>
-          <TabsContent value="reading" className="w-full border rounded-lg">
+          <TabsContent
+            value="reading"
+            className="w-full border border-border rounded-lg p-4"
+          >
             <Reading user={user} />
           </TabsContent>
-          <TabsContent value="writing">
+          <TabsContent
+            value="writing"
+            className="w-full border border-border rounded-lg"
+          >
             <Writing />
           </TabsContent>
           <TabsContent value="creating">

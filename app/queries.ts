@@ -326,24 +326,5 @@ export async function getPreferences(): Promise<UserPreferences | null> {
     return null;
   }
 
-  // Return default preferences if none exist
-  return data?.preferences || {
-    theme: {
-      primary: "#000000",
-      secondary: "#ffffff",
-      accent: "#ff0000",
-      background: "#f0f0f0"
-    },
-    ui: {
-      showChapterNumbers: true,
-      showWordCount: true,
-      showSummaryInCards: true,
-      compactView: false
-    },
-    reading: {
-      fontSize: 16,
-      lineHeight: 1.5,
-      paragraphSpacing: 1.2
-    }
-  };
+  return data.preferences;
 }

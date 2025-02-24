@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Moon, Sun } from "lucide-react";
+import { usePreferences } from "@/app/providers/PreferencesProvider";
 
 const themeNames = {
   light: "Light",
@@ -19,11 +20,25 @@ const themeNames = {
   mocha: "Mocha",
   matcha: "Matcha",
   "matcha-dark": "Matcha Dark",
-  system: "System",
+  ayu: "Ayu",
+  "ayu-dark": "Ayu Dark",
+  custom: "Custom",
 } as const;
 
 export function ModeToggle() {
   const { theme, setTheme, themes } = useTheme();
+  const { preferences, updatePreference } = usePreferences();
+
+  const handleThemeChange = (themeName: string) => {
+    setTheme(themeName);
+    if (themeName === "custom" && preferences?.theme) {
+      // Apply custom theme colors from preferences
+      updatePreference("theme", {
+        ...preferences.theme,
+        name: "custom",
+      });
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -38,7 +53,7 @@ export function ModeToggle() {
         {themes.map((themeName) => (
           <DropdownMenuItem
             key={themeName}
-            onClick={() => setTheme(themeName)}
+            onClick={() => handleThemeChange(themeName)}
             className={theme === themeName ? "bg-accent" : ""}
           >
             {themeNames[themeName as keyof typeof themeNames] || themeName}

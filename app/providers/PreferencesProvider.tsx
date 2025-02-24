@@ -12,6 +12,13 @@ type PreferencesContextType = {
 
 const PreferencesContext = createContext<PreferencesContextType | null>(null);
 
+export const usePreferences = () => {
+  const context = useContext(PreferencesContext);
+  if (!context)
+    throw new Error("usePreferences must be used within PreferencesProvider");
+  return context;
+};
+
 export function PreferencesProvider({
   children,
   initialPreferences,
@@ -26,13 +33,9 @@ export function PreferencesProvider({
 
   const updatePreference = async (key: string, value: any) => {
     if (!preferences) return;
-
     const updatedPreferences = {
       ...preferences,
-      [key.split(".")[0]]: {
-        ...preferences[key.split(".")[0] as keyof UserPreferences],
-        [key.split(".")[1]]: value,
-      },
+      [key]: value,
     };
 
     const { error } = await supabase
@@ -45,8 +48,33 @@ export function PreferencesProvider({
   };
 
   const isFeatureEnabled = (feature: PreferenceKey): boolean => {
-    return preferences?.ui?.[feature] ?? true; // Default to true if not set
+    return preferences?.ui?.[feature] ?? true;
   };
+
+  useEffect(() => {
+    if (preferences?.theme) {
+      const style = document.createElement("style");
+      style.innerHTML = `
+        [data-theme="custom"] {
+          --background: ${preferences.theme.background};
+          --foreground: ${preferences.theme.foreground};
+          --card: ${preferences.theme.background};
+          --card-foreground: ${preferences.theme.foreground};
+          --popover: ${preferences.theme.background};
+          --popover-foreground: ${preferences.theme.foreground};
+          --primary: ${preferences.theme.primary};
+          --secondary: ${preferences.theme.secondary};
+          --muted: ${preferences.theme.muted};
+          --accent: ${preferences.theme.accent};
+        }
+      `;
+      document.head.appendChild(style);
+      return () => {
+        document.head.removeChild(style);
+        return undefined;
+      };
+    }
+  }, [preferences?.theme]);
 
   return (
     <PreferencesContext.Provider
@@ -56,10 +84,3 @@ export function PreferencesProvider({
     </PreferencesContext.Provider>
   );
 }
-
-export const usePreferences = () => {
-  const context = useContext(PreferencesContext);
-  if (!context)
-    throw new Error("usePreferences must be used within PreferencesProvider");
-  return context;
-};

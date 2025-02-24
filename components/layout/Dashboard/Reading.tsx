@@ -57,20 +57,27 @@ const Reading = async ({ user }: { user: any }) => {
     author: bookmark.Chapter.Story.Author.username,
     createdAt: bookmark.Chapter.Story.created_at,
   }));
-  console.log("Stories", stories);
 
   if (error) {
     console.error("Error fetching bookmarks:", error);
   }
   return (
     <>
-      <Tabs defaultValue="bookmarks">
-        <TabsList className="w-full justify-end">
-          <TabsTrigger value="bookmarks">List</TabsTrigger>
-          <TabsTrigger value="stories">Table</TabsTrigger>
+      <Tabs defaultValue="list" className="w-full">
+        <TabsList className="w-full py-10 px-5 bg-background flex justify-between">
+          <h1 className="text-2xl w-1/2 font-bold border-border border-b pb-4 text-foreground">
+            Bookmarks
+          </h1>
+          <div className="flex gap-2">
+            <TabsTrigger value="list" className="border border-border">
+              List
+            </TabsTrigger>
+            <TabsTrigger value="table" className="border border-border">
+              Table
+            </TabsTrigger>
+          </div>
         </TabsList>
-        <TabsContent value="bookmarks" className="p-10">
-          <h1 className="text-2xl font-bold">Bookmarks</h1>
+        <TabsContent value="list" className="px-5">
           <div className="flex flex-col gap-4">
             {bookmarks?.map((bookmark) => (
               <div key={bookmark.id}>
@@ -85,10 +92,10 @@ const Reading = async ({ user }: { user: any }) => {
             ))}
           </div>
         </TabsContent>
-        <TabsContent value="stories" className="p-10">
-          <h1 className="text-2xl font-bold mb-4">Bookmarks</h1>
+        <TabsContent value="table" className="p-5">
           <DataTable<Story, any> columns={columns} data={stories || []} />
         </TabsContent>
+        <TabsContent value="create" className="p-5"></TabsContent>
       </Tabs>
     </>
   );

@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { themes } from "@/app/config/themes";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -20,6 +19,10 @@ export const themeNames = {
   mocha: "Mocha",
   matcha: "Matcha",
   "matcha-dark": "Matcha Dark",
+  debug: "Debug",
+  ayu: "Ayu",
+  "ayu-dark": "Ayu Dark",
+  custom: "Custom",
 } as const;
 
 const custom_themes = Object.keys(themeNames);
@@ -28,7 +31,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (
     <NextThemesProvider
       attribute="data-theme"
-      defaultTheme="system"
+      defaultTheme="light"
       enableSystem
       themes={custom_themes}
       {...props}

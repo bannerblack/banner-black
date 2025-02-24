@@ -17,7 +17,6 @@ export default async function AuthorPage({
 }) {
   const { id } = await params;
   const profile = await getProfileData(id);
-  console.log("profile", profile);
 
   return (
     <div>

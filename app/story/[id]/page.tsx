@@ -108,13 +108,13 @@ const Story = async ({ params }: StoryProps) => {
             </Link>
           </CardTitle>
         </CardHeader>
-        <CardDescription className="border-t border-b px-6 py-3 flex flex-row gap-2">
+        <CardDescription className="border-border border-b border-t px-6 py-3 flex flex-row gap-2">
           <p>Chapters: {story.chapter_count}</p>
           <p>Words: {story.total_words}</p>
           <p>Views: {story.views}</p>
           <p>Likes: {story.likes}</p>
         </CardDescription>
-        <CardDescription className="border-b px-6 py-3 mb-4 flex flex-row gap-2">
+        <CardDescription className="border-border border-b px-6 py-3 mb-4 flex flex-row gap-2">
           <p>Comments: {story.comments}</p>
           <p>Bookmarks: {story.bookmarks}</p>
           {/* Created at and updated at */}
@@ -126,7 +126,7 @@ const Story = async ({ params }: StoryProps) => {
         </CardContent>
       </Card>
 
-      <CardFooter className="p-2 border rounded-md mt-4 flex justify-center gap-4">
+      <CardFooter className="p-2 border border-border rounded-md mt-4 flex justify-center gap-4">
         <RecommendModal
           storyId={id}
           authors={authors || []}
@@ -154,7 +154,7 @@ const Story = async ({ params }: StoryProps) => {
             <div className="flex flex-col gap-4">
               {story.Chapters.map((chapter) => (
                 <div className="flex flex-row gap-4">
-                  <div className="side border rounded-lg p-4">
+                  <div className="side border border-border rounded-lg p-4">
                     CH{chapter.chapter_index}
                   </div>
                   <div className="mt-1 chapter-info flex flex-col gap-1">

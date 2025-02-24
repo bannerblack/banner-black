@@ -10,7 +10,6 @@ import {
 async function getData(): Promise<Story[]> {
   const user = await getBasicUser();
   const stories = await getStoriesByUserId(user.id);
-  console.log(stories);
   return stories || [];
 }
 
